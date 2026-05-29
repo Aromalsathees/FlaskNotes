@@ -6,6 +6,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False 
 
 db.init_app(app)
+# above are configutions 
+
+
 
 # home page url and views starts here
 @app.route('/')
@@ -61,6 +64,7 @@ def add_students():
 
 
 
+# below are configutions 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
