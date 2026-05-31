@@ -3,11 +3,10 @@ from models import db,Student
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///users.db' 
-app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 # above are configutions 
-
 
 
 # home page url and views starts here
@@ -30,7 +29,7 @@ def get_students():
     return jsonify(student_list)
   
 # Get a sinngle student url and views starts here
-@app.route('/signle_student/<int:id>/', methods=['GET'])
+@app.route('/single_student/<int:id>/', methods=['GET'])
 def get_single_student(id):
 
     single_student = Student.query.get(id)
@@ -43,7 +42,7 @@ def get_single_student(id):
 
 
 # post student url and views starts here
-@app.route('/add_students' , method='POST')
+@app.route('/add_students' , methods=['POST'])
 def add_students():
 
     # recive json data
@@ -62,7 +61,29 @@ def add_students():
         'student':new_student.to_dict()
     }),201
 
+@app.route('/delete_students/<int:id>/',methods=['DELETE'])
+def delete_student(id):
+    get_student = Student.query.get(id)
+    db.session.delete(get_student)
+    db.session.commit()
 
+    return jsonify({
+        'message': 'Student deleted successfully'
+    }), 200
+
+@app.route('/update_data/<int:id>',methods=['PUT'])
+def alter_data(id):
+    student = Student.query.get(id)
+
+    data = request.get_json()
+    
+    student.name = data['name']
+    student.course = data['course']
+    db.session.commit()
+
+    return jsonify({
+        'message':'data succesfully updated'
+    })
 
 # below are configutions 
 if __name__ == '__main__':
